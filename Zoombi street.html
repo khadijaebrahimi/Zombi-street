@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zombi Street</title>
+</head>
+<body>
+    <script>
+
+
+// Zombie Street Shootout — Weapons Edition
+
+// 1. Create player object
+const player = {
+  name: "Survivor",
+  health: 100,
+  currentWeapon: "pistol", 
+  inventory: {
+    knife: { name: "Knife", damage: 15, ammo: Infinity }, 
+    pistol: { name: "Pistol", damage: 20, ammo: 6 },
+    shotgun: { name: "Shotgun", damage: 35, ammo: 2 },
+    rifle: { name: "Rifle", damage: 25, ammo: 4 }, 
+    axe: { name: "Axe", damage: 30, ammo: Infinity },
+    flamethrower: { name: "Flamethrower", damage: 40, ammo: 3 }
+  }
+};
+
+// 2. Create zombie types
+const zombies = [
+  { name: "Walker", health: 50 },
+  { name: "Crawler", health: 60 },
+  { name: "Brute", health: 80 }
+];
+
+// 3. Select a zombie to fight
+let currentZombieIndex = 0; 
+let zombie = zombies[currentZombieIndex];
+
+console.log(`A wild ${zombie.name} appears with ${zombie.health} health!`);
+
+// 4. Attack logic
+function attack() {
+  let weapon = player.inventory[player.currentWeapon];
+  let weaponName = player.currentWeapon;
+
+  // Check if weapon exists
+  if (!weapon) {
+    console.log(`Weapon ${weaponName} not found!`);
+    return;
+  }
+
+  // Check ammo
+  let hasAmmo = false;
+  if (weapon.ammo === Infinity) {
+    hasAmmo = true;
+  } else if (weapon.ammo > 0) {
+    hasAmmo = true;
+  }
+
+  // If no ammo, fallback to knife
+  if (!hasAmmo) {
+    console.log(`${weaponName} is out of ammo! Falling back to Knife.`);
+    weapon = player.inventory["knife"];
+    weaponName = "Knife";
+  }
+
+  // Attack zombie
+  zombie.health -= weapon.damage;
+  console.log(`${player.name} attacks with ${weapon.name}, dealing ${weapon.damage} damage.`);
+
+  if (weapon.ammo !== Infinity) {
+    weapon.ammo -= 1;
+    console.log(`${weapon.name} ammo left: ${weapon.ammo}`);
+  }
+
+  // Check if zombie is dead
+  if (zombie.health <= 0) {
+    console.log(`The ${zombie.name} is defeated!`);
+  } else {
+    // Zombie attacks back
+    player.health -= 10; // fixed damage
+    console.log(`The ${zombie.name} attacks back! ${player.name} now has ${player.health} health.`);
+  }
+}
+
+// Run attack sequence
+attack();
+
+// 5. End of combat, print final statuses
+console.log("\nFinal Player Status:");
+console.log(`Name: ${player.name}`);
+console.log(`Health: ${player.health}`);
+console.log(`Current Weapon: ${player.currentWeapon}`);
+console.log("Weapon Ammo:");
+for (let w in player.inventory) {
+  let wInfo = player.inventory[w];
+  console.log(`- ${wInfo.name}: ${wInfo.ammo === Infinity ? "Infinite" : wInfo.ammo}`);
+}
+
+console.log("\nFinal Zombie Status:");
+console.log(`${zombie.name} has ${zombie.health} health.`);
+
+
+
+    </script>
+
+</body>
+</html>
